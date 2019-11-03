@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
+using Microsoft.AspNetCore.Routing;
 using Moq;
 using SportStorage.Components;
 using SportStorage.Models;
@@ -25,10 +28,22 @@ namespace SportStorage.Tests
                 }).AsQueryable()
             );
             NavigationMenuViewComponent target = new NavigationMenuViewComponent(mock.Object);
+            target.ViewComponentContext = new ViewComponentContext
+            {
+                ViewContext = new ViewContext
+                {
+                    RouteData = new RouteData()
+                }
+            };
 
-            string[] results = ((IEnumerable<string>) (target.Invoke() as ViewComponentResult).ViewData.Model).ToArray();
-            
-            Assert.True(Enumerable.SequenceEqual(new string [] {"C1","C2","C3","C4"}, results));
+            string categoryToSelect = "Apples";
+            target.RouteData.Values["category"] = categoryToSelect;
+            string result = (string) (target.Invoke() as ViewViewComponentResult).ViewData["SelectedCategory"];
+            string[] results =
+                ((IEnumerable<string>) (target.Invoke() as ViewComponentResult).ViewData.Model).ToArray();
+
+            Assert.Equal(categoryToSelect, result);
+            Assert.True(Enumerable.SequenceEqual(new string[] {"C1", "C2", "C3", "C4"}, results));
         }
     }
 }

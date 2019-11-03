@@ -16,12 +16,12 @@ namespace SportStorage.Controllers
             _productRepository = productRepository;
         }
 
-        public ViewResult List( string category, int productPage = 1)
+        public ViewResult List(string category, int productPage = 1)
         {
             return View(new ProductsListViewModel
                 {
                     Products = _productRepository.Products
-                        .Where(m=> category == null || m.Category == category)
+                        .Where(m => category == null || m.Category == category)
                         .OrderBy(m => m.ProductId)
                         .Skip((productPage - 1) * PageSize)
                         .Take(PageSize),
@@ -29,7 +29,9 @@ namespace SportStorage.Controllers
                     {
                         CurrentPage = productPage,
                         ItemsPerPages = PageSize,
-                        TotalItems = _productRepository.Products.Count()
+                        TotalItems = category == null
+                            ? _productRepository.Products.Count()
+                            : _productRepository.Products.Count(m => m.Category == category)
                     },
                     CurrentCategory = category,
                 }
