@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SportStorage.Models;
+using SportStorage.Models.ViewModels;
 
 namespace SportStorage
 {
@@ -29,8 +30,14 @@ namespace SportStorage
                 .AddDbContext<ApplicationDbContext>(builder => builder.UseNpgsql(
                     Configuration["Data:SportStoreProducts:ConnectionString"]));
 
-            services.AddTransient<IProductRepository, EfProductRepository>();
+            services.AddTransient<IProductRepository, EfProductRepository>()
+                .AddScoped<Cart>(sp => SessionCart.GetCart(sp))
+                .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
+                ;
+
             services.AddMvc();
+            services.AddSession();
+            services.AddMemoryCache();
         }
 
 
@@ -52,28 +59,30 @@ namespace SportStorage
             app.UseCookiePolicy();
             app.UseStatusCodePages();
 
+            app.UseSession();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: null,
-                    template:"{category}/Page{productPage:int}",
-                    defaults:new {controller = "Product", action="List"}
-                    );
+                    template: "{category}/Page{productPage:int}",
+                    defaults: new {controller = "Product", action = "List"}
+                );
                 routes.MapRoute(
                     name: null,
-                    template:"Page{productPage:int}",
-                    defaults:new {controller = "Product", action="List", productPage=1}
-                    );
+                    template: "Page{productPage:int}",
+                    defaults: new {controller = "Product", action = "List", productPage = 1}
+                );
                 routes.MapRoute(
                     name: null,
-                    template:"{category}",
-                    defaults:new {controller = "Product", action="List", productPage=1}
-                    );
+                    template: "{category}",
+                    defaults: new {controller = "Product", action = "List", productPage = 1}
+                );
                 routes.MapRoute(
                     name: null,
-                    template:"",
-                    defaults:new {controller = "Product", action="List", productPage=1}
-                    );
+                    template: "",
+                    defaults: new {controller = "Product", action = "List", productPage = 1}
+                );
                 routes.MapRoute(
                     name: null,
                     template: "{controller}/{action}/{id?}");

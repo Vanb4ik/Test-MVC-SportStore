@@ -6,12 +6,19 @@
     <link rel="stylesheet"
           asp-href-include="/lib/bootstrap/dist/**/*.css"
           asp-href-exclude="**/*-reboot,**/*-grid*"/>
+    <link rel="stylesheet" asp-href-include="/lib/fontawesome/css/*.css">
     <title>@ViewData["Title"] - SportStorage</title>
 </head>
 <body>
-<div class="navbar navbar-inverse bg-inverse" role="navigation">
-    <a href="#" class="navbar-brand">SPORT STORE</a>
+<div class="navbar navbar-dark bg-dark" role="navigation">
+   <div class="row" style="width: 100%;">
+       <a class="col navbar-brand" href="#">SPORT STORAGE</a>
+       <div class="col-4 text-right">
+           @await Component.InvokeAsync("CartSummary")
+       </div>
+   </div> 
 </div>
+
 <div class="row m-1 p-1">
     <div id="categories" class="col-3">
         @await Component.InvokeAsync("NavigationMenu")
