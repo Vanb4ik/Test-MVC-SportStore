@@ -30,7 +30,9 @@ namespace SportStorage
                 .AddDbContext<ApplicationDbContext>(builder => builder.UseNpgsql(
                     Configuration["Data:SportStoreProducts:ConnectionString"]));
 
-            services.AddTransient<IProductRepository, EfProductRepository>()
+            services
+                .AddTransient<IProductRepository, EfProductRepository>()
+                .AddTransient<IOrderRepository, EFOrderRepository>()
                 .AddScoped<Cart>(sp => SessionCart.GetCart(sp))
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
                 ;
