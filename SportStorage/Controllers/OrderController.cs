@@ -1,3 +1,6 @@
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SportStorage.Models;
 
@@ -19,7 +22,7 @@ namespace SportStorage.Controllers
         [HttpPost]
         public IActionResult Checkout(Order order)
         {
-            if (_cart.Lines.Count == 0)
+            if (_cart.Lines.Count() == 0)
             {
                 ModelState.AddModelError("", "Sorry, your cart is empty!");
             }
@@ -39,6 +42,26 @@ namespace SportStorage.Controllers
         {
             _cart.Clear();
             return View();
+        }
+
+        public ViewResult List()
+        {
+            var filteredOrders = _orderRepository.Orders.Where(m => !m.Shiped);
+            return View(filteredOrders);
+        }
+
+        [HttpPost]
+        public IActionResult MarkShipped(int orderId)
+        {
+            Order order = _orderRepository.Orders.FirstOrDefault(m => m.OrderId == orderId);
+
+            if (order != null)
+            {
+                order.Shiped = true;
+                _orderRepository.Save(order);
+            }
+
+            return RedirectToAction(nameof(List));
         }
     }
 }

@@ -10,8 +10,8 @@ using SportStorage.Models;
 namespace SportStorage.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191201102650_Orders")]
-    partial class Orders
+    [Migration("20191208172124_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -63,6 +63,8 @@ namespace SportStorage.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired();
+
+                    b.Property<bool>("Shiped");
 
                     b.Property<string>("State")
                         .IsRequired();

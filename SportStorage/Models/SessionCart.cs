@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using SportStorage.Infrastructure;
 
-namespace SportStorage.Models.ViewModels
+namespace SportStorage.Models
 {
     public class SessionCart: Cart
     {

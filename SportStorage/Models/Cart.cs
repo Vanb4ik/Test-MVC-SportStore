@@ -43,7 +43,7 @@ namespace SportStorage.Models
             return _lineColection.Sum(m => m.Product.Price * m.Quantity);
         } 
 
-        public List<CartLine> Lines => _lineColection;
+        public virtual IEnumerable<CartLine> Lines => _lineColection;
     }
 
     public class CartLine

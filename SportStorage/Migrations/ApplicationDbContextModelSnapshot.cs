@@ -62,6 +62,8 @@ namespace SportStorage.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<bool>("Shiped");
+
                     b.Property<string>("State")
                         .IsRequired();
 

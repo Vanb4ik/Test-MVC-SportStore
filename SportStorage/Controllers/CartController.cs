@@ -10,19 +10,19 @@ namespace SportStorage.Controllers
     public class CartController : Controller
     {
         private readonly IProductRepository _productRepository;
-        private readonly Cart _cartService;
+        private readonly Cart _cart;
 
-        public CartController( IProductRepository productRepository, Cart cartService)
+        public CartController( IProductRepository productRepository, Cart cart)
         {
             _productRepository = productRepository;
-            _cartService = cartService;
+            _cart = cart;
         }
 
         public ViewResult Index(string returnUrl)
         {
             return View(new CartIndexViewModel
             {
-                Cart = _cartService,
+                Cart = _cart,
                 ReturnUrl = returnUrl
             });
         }
@@ -33,7 +33,7 @@ namespace SportStorage.Controllers
                 .FirstOrDefault(p => p.ProductId == productId);
             if (product != null)
             {
-                _cartService.AddItem(product, 1);
+                _cart.AddItem(product, 1);
             }
 
             return RedirectToAction("Index", new {returnUrl});
@@ -44,7 +44,7 @@ namespace SportStorage.Controllers
             Product product = _productRepository.Products.FirstOrDefault(m => m.ProductId == productId);
             if (product != null)
             {
-                _cartService.RemoveLine(product);
+                _cart.RemoveLine(product);
             }
 
             return RedirectToAction("Index", new {returnUrl});
