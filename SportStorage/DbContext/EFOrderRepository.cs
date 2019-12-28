@@ -18,13 +18,13 @@ namespace SportStorage.Models
 
         public void Save(Order order)
         {
-            _ctx.AttachRange(order.Lines.Select(l=>l.Product));
             if (order.OrderId == 0)
             {
                 _ctx.Orders.Add(order);
             }
+            _ctx.AttachRange(order.Lines.Select(l=>l.Product));
 
-            _ctx.SaveChangesAsync();
+            _ctx.SaveChanges();
         }
     }
 }

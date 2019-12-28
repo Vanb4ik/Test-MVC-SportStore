@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +29,13 @@ namespace SportStorage
             services
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<ApplicationDbContext>(builder => builder.UseNpgsql(
-                    Configuration["Data:SportStoreProducts:ConnectionString"]));
+                    Configuration["Data:SportStoreProducts:ConnectionString"]))
+                .AddDbContext<AppIdentityDbContext>(builder => builder.UseNpgsql(
+                    Configuration["Data:SportStoreIdentity:ConnectionString"]))
+                .AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppIdentityDbContext>()
+                .AddDefaultTokenProviders()
+                ;
 
             services
                 .AddTransient<IProductRepository, EfProductRepository>()
@@ -63,6 +70,7 @@ namespace SportStorage
 
             app.UseSession();
 
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -90,6 +98,7 @@ namespace SportStorage
                     template: "{controller}/{action}/{id?}");
             });
             SeedData.EnsurePopulated(app);
+            IdentitySeedData.EnsurePopulated(app);
         }
     }
 }

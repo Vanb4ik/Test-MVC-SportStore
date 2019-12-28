@@ -1,6 +1,7 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SportStorage.Models;
 
@@ -44,12 +45,14 @@ namespace SportStorage.Controllers
             return View();
         }
 
+        [Authorize]
         public ViewResult List()
         {
             var filteredOrders = _orderRepository.Orders.Where(m => !m.Shiped);
             return View(filteredOrders);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult MarkShipped(int orderId)
         {
