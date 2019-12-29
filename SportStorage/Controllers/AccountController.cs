@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using SportStorage.Models;
 using SportStorage.Models.ViewModels;
 
 namespace SportStorage.Controllers
@@ -16,6 +18,7 @@ namespace SportStorage.Controllers
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            IdentitySeedData.EnsurePopulated(userManager).Wait();
         }
 
         [AllowAnonymous]
@@ -30,7 +33,7 @@ namespace SportStorage.Controllers
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user = await _userManager.FindByIdAsync(loginModel.Name);
+                IdentityUser user = await _userManager.FindByNameAsync(loginModel.Name);
 
                 if (user != null)
                 {

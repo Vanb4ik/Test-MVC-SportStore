@@ -5,7 +5,7 @@ namespace SportStorage.Models.ViewModels
     public class LoginModel
     {
         [Required]
-        public string Type { get; set; }
+        public string Name { get; set; }
         
         [Required]
         [UIHint("password")]
